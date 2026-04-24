@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+{% block title %}Register – PlaceHub{% endblock %}
+
+{% block head %}
+<style>
+  body { background: linear-gradient(135deg, #0a2540 0%, #1a4a7a 60%, #0a2540 100%); }
+  .reg-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .reg-card { width: 100%; max-width: 520px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.35); overflow: hidden; }
+  .reg-top {
+    background: var(--brand);
+    padding: 1.6rem 2rem 1.2rem;
+    border-bottom: 3px solid var(--accent);
+  }
+  .reg-top .logo { font-family:'Syne',sans-serif; font-size:1.8rem; font-weight:800; color:#fff; }
+  .reg-top .logo span { color: var(--accent); }
+  .reg-top p { color:rgba(255,255,255,.65); font-size:.85rem; margin:.25rem 0 0; }
+  .reg-body { background:#fff; padding:2rem; }
+  .form-label { font-weight:500; font-size:.87rem; color:var(--text); }
+  .form-control, .form-select {
+    border-radius:8px; border:1.5px solid var(--border);
+    padding:.5rem .85rem; font-size:.88rem;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(0,196,140,.15);
+  }
+  /* role-specific extra fields toggled via CSS class on the wrapper */
+  .extra-student, .extra-company { display: none; }
+  body.role-student .extra-student { display: block; }
+  body.role-company .extra-company { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reg-wrap">
+  <div class="reg-card">
+    <div class="reg-top">
+      <div class="logo">Place<span>Hub</span></div>
+      <p>Create your account</p>
+    </div>
+    <div class="reg-body">
+      <form method="POST" action="{{ url_for('register') }}" id="regForm">
+
+        <!-- Role selector -->
+        <div class="mb-3">
+          <label class="form-label" for="role">I am registering as</label>
+          <select class="form-select" id="role" name="role" required onchange="switchRole(this.value)">
+            <option value="" disabled selected>Select role…</option>
+            <option value="Student">Student</option>
+            <option value="Company">Company / Recruiter</option>
+          </select>
+        </div>
+
+        <!-- Common fields -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" type="text" id="username" name="username"
+                   placeholder="unique username" required />
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label" for="password">Password</label>
+            <input class="form-control" type="password" id="password" name="password"
+                   placeholder="choose a password" required />
+          </div>
+        </div>
+
+        <!-- Student-only fields -->
+        <div id="studentFields">
+          <hr class="my-2"><p class="text-muted" style="font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;">Student Details</p>
+          <div class="mb-3">
+            <label class="form-label" for="full_name">Full Name</label>
+            <input class="form-control" type="text" id="full_name" name="full_name" placeholder="Your full name" />
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="roll_number">Roll Number</label>
+              <input class="form-control" type="text" id="roll_number" name="roll_number" placeholder="e.g. CS2021001" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="skills">Skills</label>
+              <input class="form-control" type="text" id="skills" name="skills" placeholder="Python, Java, SQL…" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Company-only fields -->
+        <div id="companyFields" style="display:none;">
+          <hr class="my-2"><p class="text-muted" style="font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;">Company Details</p>
+          <div class="mb-3">
+            <label class="form-label" for="company_name">Company Name</label>
+            <input class="form-control" type="text" id="company_name" name="company_name" placeholder="Acme Corp" />
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="hr_contact">HR Contact Email</label>
+              <input class="form-control" type="text" id="hr_contact" name="hr_contact" placeholder="hr@company.com" />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label" for="website">Website</label>
+              <input class="form-control" type="text" id="website" name="website" placeholder="https://company.com" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-brand w-100 py-2 mt-2">
+          <i class="bi bi-person-plus me-2"></i>Create Account
+        </button>
+      </form>
+
+      <hr class="my-3">
+      <p class="text-center mb-0" style="font-size:.87rem;color:var(--muted);">
+        Already have an account?
+        <a href="{{ url_for('login') }}" style="color:var(--accent);font-weight:600;">Sign in</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Minimal JS only for UX – shows/hides the correct registration fields.
+   This does NOT handle form submission or routing (that's Flask). */
+function switchRole(role) {
+  document.getElementById('studentFields').style.display = (role === 'Student') ? 'block' : 'none';
+  document.getElementById('companyFields').style.display = (role === 'Company') ? 'block' : 'none';
+}
+// Initialise on page load
+window.onload = function() {
+  const sel = document.getElementById('role');
+  if (sel.value) switchRole(sel.value);
+};
+</script>
+{% endblock %}

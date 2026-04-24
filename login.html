@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Login – PlaceHub{% endblock %}
+
+{% block head %}
+<style>
+  body { background: linear-gradient(135deg, #0a2540 0%, #1a4a7a 60%, #0a2540 100%); }
+  .login-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    overflow: hidden;
+  }
+  .login-top {
+    background: var(--brand);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+    border-bottom: 3px solid var(--accent);
+  }
+  .login-top .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+  }
+  .login-top .logo span { color: var(--accent); }
+  .login-top p { color: rgba(255,255,255,.65); font-size: .88rem; margin: .4rem 0 0; }
+  .login-body { background: #fff; padding: 2rem; }
+  .form-label { font-weight: 500; font-size: .88rem; color: var(--text); }
+  .form-control {
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    padding: .55rem .9rem;
+    font-size: .9rem;
+  }
+  .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,196,140,.15);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="logo">Place<span>Hub</span></div>
+      <p>Placement Management System</p>
+    </div>
+    <div class="login-body">
+      <h5 class="mb-3" style="font-family:'Syne',sans-serif;">Sign In</h5>
+      <form method="POST" action="{{ url_for('login') }}">
+        <div class="mb-3">
+          <label class="form-label" for="username">Username</label>
+          <input class="form-control" type="text" id="username" name="username"
+                 placeholder="Enter your username" required autofocus />
+        </div>
+        <div class="mb-4">
+          <label class="form-label" for="password">Password</label>
+          <input class="form-control" type="password" id="password" name="password"
+                 placeholder="Enter your password" required />
+        </div>
+        <button type="submit" class="btn btn-brand w-100 py-2">
+          <i class="bi bi-box-arrow-in-right me-2"></i>Login
+        </button>
+      </form>
+      <hr class="my-3">
+      <p class="text-center mb-0" style="font-size:.88rem;color:var(--muted);">
+        New here?
+        <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">Register as Student / Company</a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends "layout.html" %}
+{% block title %}Admin Dashboard – PlaceHub{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2><i class="bi bi-shield-lock-fill me-2"></i>Admin Dashboard</h2>
+  <p>Manage companies, students, and placement drives</p>
+</div>
+
+<!-- ── Stats Row ──────────────────────────────────────────── -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-brand">
+      <div class="stat-value">{{ total_students }}</div>
+      <div class="stat-label">Total Students</div>
+      <i class="bi bi-mortarboard stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-teal">
+      <div class="stat-value">{{ total_companies }}</div>
+      <div class="stat-label">Total Companies</div>
+      <i class="bi bi-building stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-purple">
+      <div class="stat-value">{{ total_drives }}</div>
+      <div class="stat-label">Total Drives</div>
+      <i class="bi bi-briefcase stat-icon"></i>
+    </div>
+  </div>
+  <div class="col-6 col-md-3">
+    <div class="stat-card bg-accent-2">
+      <div class="stat-value">{{ pending_companies + pending_drives }}</div>
+      <div class="stat-label">Pending Reviews</div>
+      <i class="bi bi-hourglass-split stat-icon"></i>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tabs ───────────────────────────────────────────────── -->
+<ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-companies">
+      <i class="bi bi-building me-1"></i>Companies
+      {% if pending_companies %}<span class="badge bg-danger ms-1">{{ pending_companies }}</span>{% endif %}
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-drives">
+      <i class="bi bi-briefcase me-1"></i>Drives
+      {% if pending_drives %}<span class="badge bg-danger ms-1">{{ pending_drives }}</span>{% endif %}
+    </button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-students">
+      <i class="bi bi-people me-1"></i>Students
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content">
+
+  <!-- ── Companies Tab ──────────────────────────── -->
+  <div class="tab-pane fade show active" id="tab-companies">
+    <div class="card mb-3">
+      <div class="card-header d-flex align-items-center gap-2">
+        <i class="bi bi-funnel"></i> Filter Companies
+      </div>
+      <div class="card-body">
+        <form method="GET" action="{{ url_for('admin_dashboard') }}#tab-companies" class="row g-2">
+          <div class="col-md-5">
+            <input class="form-control form-control-sm" type="text" name="company_q"
+                   placeholder="Search by name…" value="{{ company_q }}">
+          </div>
+          <div class="col-md-4">
+            <select class="form-select form-select-sm" name="company_status">
+              <option value="">All Statuses</option>
+              <option value="Pending"  {% if company_status_filter=='Pending'  %}selected{% endif %}>Pending</option>
+              <option value="Approved" {% if company_status_filter=='Approved' %}selected{% endif %}>Approved</option>
+              <option value="Rejected" {% if company_status_filter=='Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-brand btn-sm w-100" type="submit">Apply Filter</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>#</th><th>Company</th><th>HR Contact</th><th>Website</th>
+              <th>Status</th><th>User Active</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for cp in companies %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ cp.company_name }}</strong></td>
+              <td>{{ cp.hr_contact }}</td>
+              <td>
+                {% if cp.website %}
+                  <a href="{{ cp.website }}" target="_blank" style="color:var(--accent)">
+                    <i class="bi bi-link-45deg"></i>
+                  </a>
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                <span class="badge-status status-{{ cp.approval_status | lower }}">
+                  {{ cp.approval_status }}
+                </span>
+              </td>
+              <td>
+                {% if cp.user.is_active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-danger">Blacklisted</span>
+                {% endif %}
+              </td>
+              <td>
+                <div class="d-flex gap-1 flex-wrap">
+                  <!-- Approval status controls -->
+                  {% if cp.approval_status != 'Approved' %}
+                  <form method="POST" action="{{ url_for('toggle_company_status', company_id=cp.id) }}">
+                    <input type="hidden" name="status" value="Approved">
+                    <button class="btn btn-sm btn-success py-0 px-2" title="Approve">
+                      <i class="bi bi-check-lg"></i> Approve
+                    </button>
+                  </form>
+                  {% endif %}
+                  {% if cp.approval_status != 'Rejected' %}
+                  <form method="POST" action="{{ url_for('toggle_company_status', company_id=cp.id) }}">
+                    <input type="hidden" name="status" value="Rejected">
+                    <button class="btn btn-sm btn-danger py-0 px-2" title="Reject">
+                      <i class="bi bi-x-lg"></i> Reject
+                    </button>
+                  </form>
+                  {% endif %}
+                  <!-- Blacklist toggle -->
+                  <form method="POST" action="{{ url_for('toggle_blacklist', user_id=cp.user_id) }}">
+                    <button class="btn btn-sm btn-outline-secondary py-0 px-2" title="Toggle blacklist">
+                      {% if cp.user.is_active %}
+                        <i class="bi bi-ban"></i> Block
+                      {% else %}
+                        <i class="bi bi-check-circle"></i> Restore
+                      {% endif %}
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="7" class="text-center text-muted py-4">No companies found.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /tab-companies -->
+
+  <!-- ── Drives Tab ─────────────────────────────── -->
+  <div class="tab-pane fade" id="tab-drives">
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>#</th><th>Job Title</th><th>Company</th>
+              <th>Deadline</th><th>Status</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for drive in drives %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ drive.job_title }}</strong></td>
+              <td>{{ drive.company.company_name }}</td>
+              <td>{{ drive.deadline }}</td>
+              <td>
+                <span class="badge-status status-{{ drive.status | lower }}">{{ drive.status }}</span>
+              </td>
+              <td>
+                <div class="d-flex gap-1 flex-wrap">
+                  {% if drive.status != 'Approved' %}
+                  <form method="POST" action="{{ url_for('toggle_drive_status', drive_id=drive.id) }}">
+                    <input type="hidden" name="status" value="Approved">
+                    <button class="btn btn-sm btn-success py-0 px-2">
+                      <i class="bi bi-check-lg"></i> Approve
+                    </button>
+                  </form>
+                  {% endif %}
+                  {% if drive.status != 'Closed' %}
+                  <form method="POST" action="{{ url_for('toggle_drive_status', drive_id=drive.id) }}">
+                    <input type="hidden" name="status" value="Closed">
+                    <button class="btn btn-sm btn-warning py-0 px-2">
+                      <i class="bi bi-lock"></i> Close
+                    </button>
+                  </form>
+                  {% endif %}
+                  {% if drive.status != 'Pending' %}
+                  <form method="POST" action="{{ url_for('toggle_drive_status', drive_id=drive.id) }}">
+                    <input type="hidden" name="status" value="Pending">
+                    <button class="btn btn-sm btn-secondary py-0 px-2">
+                      <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </button>
+                  </form>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="text-center text-muted py-4">No drives found.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /tab-drives -->
+
+  <!-- ── Students Tab ───────────────────────────── -->
+  <div class="tab-pane fade" id="tab-students">
+    <div class="card mb-3">
+      <div class="card-header"><i class="bi bi-search me-1"></i>Search Students</div>
+      <div class="card-body">
+        <form method="GET" action="{{ url_for('admin_dashboard') }}#tab-students" class="row g-2">
+          <div class="col-md-6">
+            <input class="form-control form-control-sm" type="text" name="student_q"
+                   placeholder="Name or Roll Number…" value="{{ student_q }}">
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-brand btn-sm w-100" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>#</th><th>Full Name</th><th>Roll No.</th>
+              <th>Skills</th><th>User Active</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for st in students %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td><strong>{{ st.full_name }}</strong></td>
+              <td><code>{{ st.roll_number }}</code></td>
+              <td>
+                {% if st.skills %}
+                  {% for skill in st.skills.split(',') %}
+                    <span class="badge bg-light text-dark border me-1">{{ skill.strip() }}</span>
+                  {% endfor %}
+                {% else %}—{% endif %}
+              </td>
+              <td>
+                {% if st.user.is_active %}
+                  <span class="badge bg-success">Active</span>
+                {% else %}
+                  <span class="badge bg-danger">Blacklisted</span>
+                {% endif %}
+              </td>
+              <td>
+                <form method="POST" action="{{ url_for('toggle_blacklist', user_id=st.user_id) }}">
+                  <button class="btn btn-sm btn-outline-secondary py-0 px-2">
+                    {% if st.user.is_active %}
+                      <i class="bi bi-ban"></i> Block
+                    {% else %}
+                      <i class="bi bi-check-circle"></i> Restore
+                    {% endif %}
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="text-center text-muted py-4">No students found.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div><!-- /tab-students -->
+
+</div><!-- /tab-content -->
+{% endblock %}
