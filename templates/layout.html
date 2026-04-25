@@ -9,57 +9,91 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet" />
-  <!-- Google Fonts -->
+  <!-- Google Fonts: Syne + DM Sans -->
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
   <style>
+    /* ─────────────────────────────────────────────
+       HONEYCOMB PALETTE – CSS VARIABLES
+    ───────────────────────────────────────────── */
     :root {
-      --brand:       #0a2540;
-      --accent:      #00c48c;
-      --accent-2:    #ff6b35;
-      --surface:     #f5f7fa;
+      --gold:        #FFC107;   /* Primary Gold    */
+      --yellow:      #F9E076;   /* Mellow Yellow   */
+      --cream:       #FFFDD0;   /* Soft Cream      */
+      --brown:       #895129;   /* Deep Earth Brown */
+      --brown-dark:  #6b3d1e;   /* Darker shade for hover */
+      --brown-light: #c47a3a;   /* Lighter for accents */
+
+      /* Semantic aliases (replaces old brand/accent system) */
+      --brand:       var(--brown);
+      --accent:      var(--gold);
+      --surface:     var(--cream);
       --card-bg:     #ffffff;
-      --text:        #1a2332;
-      --muted:       #6b7a90;
-      --border:      #e1e8f0;
+      --text:        var(--brown);
+      --muted:       #7a5c3a;
+      --border:      #e8d9b0;
       --radius:      14px;
-      --shadow:      0 2px 16px rgba(10,37,64,.09);
-      --shadow-lg:   0 8px 40px rgba(10,37,64,.13);
+      --shadow:      0 2px 16px rgba(137,81,41,.10);
+      --shadow-lg:   0 8px 40px rgba(137,81,41,.18);
     }
 
+    /* ─────────────────────────────────────────────
+       BASE RESET
+    ───────────────────────────────────────────── */
     * { box-sizing: border-box; }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--surface);
-      color: var(--text);
+      background: var(--cream);
+      color: var(--brown);
       min-height: 100vh;
+    }
+
+    /* Subtle honeycomb texture overlay on body */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255,193,7,.07) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(249,224,118,.08) 0%, transparent 50%);
     }
 
     h1,h2,h3,h4,h5,h6,.navbar-brand {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
+      color: var(--brown);
     }
 
-    /* ── Navbar ──────────────────────────────────── */
+    /* ─────────────────────────────────────────────
+       BOOTSTRAP OVERRIDES
+    ───────────────────────────────────────────── */
+
+    /* Override .navbar */
     .navbar {
-      background: var(--brand) !important;
+      background: var(--brown) !important;
       padding: .9rem 2rem;
-      box-shadow: 0 2px 20px rgba(0,0,0,.18);
+      box-shadow: 0 2px 20px rgba(137,81,41,.30);
     }
     .navbar-brand {
       color: #fff !important;
       font-size: 1.4rem;
       letter-spacing: -.5px;
     }
-    .navbar-brand span { color: var(--accent); }
-    .nav-link { color: rgba(255,255,255,.8) !important; font-size: .9rem; }
-    .nav-link:hover { color: var(--accent) !important; }
+    .navbar-brand span { color: var(--gold); }
+    .navbar-toggler { border-color: rgba(255,255,255,.4); }
+    .navbar-toggler-icon {
+      filter: invert(1);
+    }
+    .nav-link { color: rgba(255,255,255,.85) !important; font-size: .9rem; }
+    .nav-link:hover { color: var(--gold) !important; }
     .nav-badge {
-      background: var(--accent);
-      color: var(--brand);
+      background: var(--gold);
+      color: var(--brown);
       font-family: 'Syne', sans-serif;
-      font-size: .7rem;
+      font-size: .68rem;
       font-weight: 700;
       padding: 2px 8px;
       border-radius: 20px;
@@ -68,23 +102,70 @@
       letter-spacing: .5px;
     }
 
-    /* ── Cards ───────────────────────────────────── */
+    /* Override .btn-primary */
+    .btn-primary {
+      background: var(--gold) !important;
+      border-color: var(--gold) !important;
+      color: var(--brown) !important;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      border-radius: 8px;
+    }
+    .btn-primary:hover, .btn-primary:focus {
+      background: var(--yellow) !important;
+      border-color: var(--yellow) !important;
+      color: var(--brown) !important;
+    }
+
+    /* Override .btn-secondary */
+    .btn-secondary {
+      background: var(--brown) !important;
+      border-color: var(--brown) !important;
+      color: #fff !important;
+      border-radius: 8px;
+    }
+    .btn-secondary:hover {
+      background: var(--brown-dark) !important;
+      border-color: var(--brown-dark) !important;
+    }
+
+    /* Override .bg-light */
+    .bg-light { background: var(--cream) !important; }
+
+    /* Override .alert variants */
+    .alert-success   { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+    .alert-danger    { background: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+    .alert-warning   { background: #fff3cd; border-color: #ffeeba; color: #856404; }
+    .alert-info      { background: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+
+    /* Override .badge */
+    .badge.bg-success { background: #28a745 !important; }
+    .badge.bg-danger  { background: #dc3545 !important; }
+
+    /* ─────────────────────────────────────────────
+       CUSTOM COMPONENT CLASSES
+    ───────────────────────────────────────────── */
+
+    /* -- Cards -- */
     .card {
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       background: var(--card-bg);
+      position: relative;
+      z-index: 1;
     }
     .card-header {
-      background: transparent;
-      border-bottom: 1px solid var(--border);
+      background: #fdf6e3;
+      border-bottom: 1.5px solid var(--border);
       font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 1rem;
       padding: 1rem 1.25rem;
+      color: var(--brown);
     }
 
-    /* ── Stat pills ──────────────────────────────── */
+    /* -- Stat pills -- */
     .stat-card {
       border-radius: var(--radius);
       padding: 1.4rem 1.6rem;
@@ -107,38 +188,49 @@
     }
     .stat-card .stat-label {
       font-size: .82rem;
-      opacity: .85;
+      opacity: .9;
       margin-top: .25rem;
       text-transform: uppercase;
       letter-spacing: .6px;
     }
-    .bg-brand    { background: var(--brand); }
-    .bg-accent   { background: var(--accent); color: var(--brand) !important; }
-    .bg-accent-2 { background: var(--accent-2); }
+    /* Stat card color variants – now using Honeycomb tones */
+    .bg-brand    { background: var(--brown); }
+    .bg-accent   { background: var(--gold); color: var(--brown) !important; }
+    .bg-accent-2 { background: #c47a3a; }
     .bg-purple   { background: #7c5cbf; }
     .bg-teal     { background: #0891b2; }
 
-    /* ── Buttons ─────────────────────────────────── */
+    /* -- Buttons (custom classes) -- */
     .btn-brand {
-      background: var(--brand);
+      background: var(--brown);
       color: #fff;
       border: none;
       border-radius: 8px;
       font-family: 'Syne', sans-serif;
       font-weight: 600;
+      transition: background .18s, transform .12s;
     }
-    .btn-brand:hover { background: #0d3060; color: #fff; }
+    .btn-brand:hover {
+      background: var(--brown-dark);
+      color: #fff;
+      transform: translateY(-1px);
+    }
     .btn-accent {
-      background: var(--accent);
-      color: var(--brand);
+      background: var(--gold);
+      color: var(--brown);
       border: none;
       border-radius: 8px;
       font-family: 'Syne', sans-serif;
       font-weight: 700;
+      transition: background .18s, transform .12s;
     }
-    .btn-accent:hover { background: #00a877; color: var(--brand); }
+    .btn-accent:hover {
+      background: var(--yellow);
+      color: var(--brown);
+      transform: translateY(-1px);
+    }
 
-    /* ── Badges ──────────────────────────────────── */
+    /* -- Badges / Status pills -- */
     .badge-status {
       font-size: .73rem;
       padding: 4px 10px;
@@ -146,18 +238,18 @@
       font-weight: 600;
       letter-spacing: .3px;
     }
-    .status-pending    { background:#fff3cd; color:#856404; }
-    .status-approved   { background:#d1fae5; color:#065f46; }
-    .status-rejected   { background:#fee2e2; color:#991b1b; }
-    .status-closed     { background:#e5e7eb; color:#374151; }
-    .status-applied    { background:#dbeafe; color:#1e40af; }
-    .status-shortlisted{ background:#fef9c3; color:#713f12; }
-    .status-selected   { background:#d1fae5; color:#065f46; }
+    .status-pending     { background: #fff3cd; color: #856404; }
+    .status-approved    { background: #d1fae5; color: #065f46; }
+    .status-rejected    { background: #fee2e2; color: #991b1b; }
+    .status-closed      { background: #e5e7eb; color: #374151; }
+    .status-applied     { background: #dbeafe; color: #1e40af; }
+    .status-shortlisted { background: #fef9c3; color: #713f12; }
+    .status-selected    { background: #d1fae5; color: #065f46; }
 
-    /* ── Tables ──────────────────────────────────── */
+    /* -- Tables -- */
     .table { font-size: .88rem; }
     .table thead th {
-      background: var(--brand);
+      background: var(--brown);
       color: #fff;
       font-family: 'Syne', sans-serif;
       font-weight: 600;
@@ -166,17 +258,18 @@
       text-transform: uppercase;
       border: none;
     }
-    .table tbody tr:hover { background: #f0f7ff; }
+    .table tbody tr:hover { background: #fdf6e3; }
 
-    /* ── Page header ─────────────────────────────── */
+    /* -- Page header banner -- */
     .page-header {
-      background: linear-gradient(135deg, var(--brand) 0%, #1a4a7a 100%);
+      background: linear-gradient(135deg, var(--brown) 0%, #c47a3a 100%);
       color: #fff;
       padding: 2rem 2.5rem;
       border-radius: var(--radius);
       margin-bottom: 1.8rem;
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
     .page-header::before {
       content: '';
@@ -184,14 +277,22 @@
       top: -60px; right: -60px;
       width: 200px; height: 200px;
       border-radius: 50%;
-      background: rgba(0,196,140,.12);
+      background: rgba(255,193,7,.18);
     }
-    .page-header h2 { font-size: 1.8rem; margin: 0; }
-    .page-header p  { opacity: .75; margin: .3rem 0 0; font-size: .9rem; }
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: 40%;
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: rgba(255,193,7,.10);
+    }
+    .page-header h2 { font-size: 1.8rem; margin: 0; color: #fff; }
+    .page-header p  { opacity: .82; margin: .3rem 0 0; font-size: .9rem; }
 
-    /* ── Drive card ──────────────────────────────── */
+    /* -- Drive cards -- */
     .drive-card {
-      border-left: 4px solid var(--accent);
+      border-left: 4px solid var(--gold);
       transition: transform .15s, box-shadow .15s;
     }
     .drive-card:hover {
@@ -199,17 +300,70 @@
       box-shadow: var(--shadow-lg);
     }
 
-    /* ── Flash messages ──────────────────────────── */
+    /* -- Form controls -- */
+    .form-control, .form-select {
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--brown);
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(255,193,7,.20);
+      color: var(--brown);
+    }
+
+    /* -- Flash messages -- */
     .alert { border-radius: 10px; font-size: .9rem; }
 
-    /* ── Footer ──────────────────────────────────── */
+    /* -- Nav tabs -- */
+    .nav-tabs .nav-link {
+      color: var(--brown) !important;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: .88rem;
+      border-radius: 8px 8px 0 0;
+    }
+    .nav-tabs .nav-link.active {
+      background: var(--gold) !important;
+      color: var(--brown) !important;
+      border-color: var(--border) var(--border) #fff;
+    }
+    .nav-tabs .nav-link:hover:not(.active) {
+      background: #fdf6e3;
+      color: var(--brown) !important;
+    }
+
+    /* -- Footer -- */
     footer {
       text-align: center;
       padding: 1.5rem;
       color: var(--muted);
       font-size: .8rem;
-      border-top: 1px solid var(--border);
+      border-top: 1.5px solid var(--border);
       margin-top: 3rem;
+      background: #fdf6e3;
+    }
+    footer strong { color: var(--brown); }
+
+    /* -- Outline buttons override -- */
+    .btn-outline-secondary {
+      border-color: var(--brown) !important;
+      color: var(--brown) !important;
+      border-radius: 8px;
+    }
+    .btn-outline-secondary:hover {
+      background: var(--brown) !important;
+      color: #fff !important;
+    }
+
+    /* -- Honeycomb decorative hex -- */
+    .hex-deco {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      opacity: .06;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     }
   </style>
   {% block head %}{% endblock %}
@@ -266,12 +420,12 @@
   </div>
 
   <!-- ── Main content ─────────────────────────── -->
-  <main class="container-fluid px-4 py-3">
+  <main class="container-fluid px-4 py-3" style="position:relative;z-index:1;">
     {% block content %}{% endblock %}
   </main>
 
   <footer>
-    &copy; {{ 2024 }} PlaceHub &mdash; Placement Management System
+    &copy; {{ 2024 }} <strong>PlaceHub</strong> &mdash; Placement Management System
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -3,7 +3,11 @@
 
 {% block head %}
 <style>
-  body { background: linear-gradient(135deg, #0a2540 0%, #1a4a7a 60%, #0a2540 100%); }
+  body {
+    background: linear-gradient(135deg, #895129 0%, #c47a3a 55%, #FFC107 100%) !important;
+  }
+  body::before { display: none; } /* disable the radial overlay on auth pages */
+
   .login-wrap {
     min-height: 100vh;
     display: flex;
@@ -14,35 +18,71 @@
     width: 100%;
     max-width: 420px;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.35);
+    box-shadow: 0 20px 60px rgba(137,81,41,.40);
     overflow: hidden;
+    border: none;
   }
   .login-top {
-    background: var(--brand);
+    background: #895129;
     padding: 2rem 2rem 1.5rem;
     text-align: center;
-    border-bottom: 3px solid var(--accent);
+    border-bottom: 4px solid #FFC107;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Decorative hexagons in header */
+  .login-top::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 110px; height: 110px;
+    background: rgba(255,193,7,.18);
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  }
+  .login-top::after {
+    content: '';
+    position: absolute;
+    bottom: -25px; left: -20px;
+    width: 80px; height: 80px;
+    background: rgba(249,224,118,.14);
+    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
   }
   .login-top .logo {
     font-family: 'Syne', sans-serif;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 800;
     color: #fff;
+    position: relative;
+    z-index: 1;
   }
-  .login-top .logo span { color: var(--accent); }
-  .login-top p { color: rgba(255,255,255,.65); font-size: .88rem; margin: .4rem 0 0; }
-  .login-body { background: #fff; padding: 2rem; }
-  .form-label { font-weight: 500; font-size: .88rem; color: var(--text); }
+  .login-top .logo span { color: #FFC107; }
+  .login-top p {
+    color: rgba(255,255,255,.70);
+    font-size: .88rem;
+    margin: .4rem 0 0;
+    position: relative;
+    z-index: 1;
+  }
+  .login-body {
+    background: #FFFDD0;
+    padding: 2rem;
+  }
+  .login-body h5 { color: #895129; }
+  .form-label { font-weight: 500; font-size: .88rem; color: #895129; }
   .form-control {
     border-radius: 8px;
-    border: 1.5px solid var(--border);
+    border: 1.5px solid #e8d9b0;
     padding: .55rem .9rem;
     font-size: .9rem;
+    background: #fff;
+    color: #895129;
   }
   .form-control:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(0,196,140,.15);
+    border-color: #FFC107;
+    box-shadow: 0 0 0 3px rgba(255,193,7,.22);
+    color: #895129;
   }
+  .form-control::placeholder { color: #b89070; }
 </style>
 {% endblock %}
 
@@ -66,14 +106,14 @@
           <input class="form-control" type="password" id="password" name="password"
                  placeholder="Enter your password" required />
         </div>
-        <button type="submit" class="btn btn-brand w-100 py-2">
+        <button type="submit" class="btn btn-accent w-100 py-2">
           <i class="bi bi-box-arrow-in-right me-2"></i>Login
         </button>
       </form>
-      <hr class="my-3">
-      <p class="text-center mb-0" style="font-size:.88rem;color:var(--muted);">
+      <hr class="my-3" style="border-color:#e8d9b0;">
+      <p class="text-center mb-0" style="font-size:.88rem;color:#7a5c3a;">
         New here?
-        <a href="{{ url_for('register') }}" style="color:var(--accent);font-weight:600;">Register as Student / Company</a>
+        <a href="{{ url_for('register') }}" style="color:#895129;font-weight:700;">Register as Student / Company</a>
       </p>
     </div>
   </div>

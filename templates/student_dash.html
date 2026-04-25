@@ -14,17 +14,17 @@
 
   <!-- ── Open Drives ───────────────────────────────────── -->
   <div class="col-lg-7">
-    <h5 class="mb-3" style="font-family:'Syne',sans-serif;">
-      <i class="bi bi-search me-1"></i>Open Placement Drives
+    <h5 class="mb-3" style="font-family:'Syne',sans-serif;color:var(--brown);">
+      <i class="bi bi-search me-1" style="color:var(--gold);"></i>Open Placement Drives
     </h5>
 
     {% if open_drives %}
       {% for drive in open_drives %}
       <div class="card drive-card mb-3">
-        <div class="card-body">
+        <div class="card-body" style="background:#fffdf0;">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <div>
-              <h6 class="mb-0" style="font-family:'Syne',sans-serif;">{{ drive.job_title }}</h6>
+              <h6 class="mb-0" style="font-family:'Syne',sans-serif;color:var(--brown);">{{ drive.job_title }}</h6>
               <span style="font-size:.82rem;color:var(--muted);">
                 <i class="bi bi-building me-1"></i>{{ drive.company.company_name }}
               </span>
@@ -38,7 +38,7 @@
 
           <div class="d-flex flex-wrap gap-3 mb-3" style="font-size:.82rem;">
             <span>
-              <i class="bi bi-person-check me-1 text-primary"></i>
+              <i class="bi bi-person-check me-1" style="color:var(--gold);"></i>
               <strong>Eligibility:</strong> {{ drive.eligibility or 'Open to all' }}
             </span>
             <span>
@@ -47,9 +47,8 @@
             </span>
           </div>
 
-          <!-- Apply button / Already Applied badge -->
           {% if drive.id in applied_drive_ids %}
-            <span class="badge bg-secondary px-3 py-2">
+            <span class="badge px-3 py-2" style="background:#e8d9b0;color:#895129;font-size:.8rem;">
               <i class="bi bi-check-circle me-1"></i>Already Applied
             </span>
           {% else %}
@@ -63,8 +62,8 @@
       </div>
       {% endfor %}
     {% else %}
-      <div class="card p-4 text-center text-muted">
-        <i class="bi bi-briefcase display-4 d-block mb-2 opacity-25"></i>
+      <div class="card p-4 text-center" style="background:#fffdf0;color:var(--muted);">
+        <i class="bi bi-briefcase display-4 d-block mb-2" style="color:var(--gold);opacity:.4;"></i>
         <p class="mb-0">No open placement drives available right now.<br>Check back soon!</p>
       </div>
     {% endif %}
@@ -72,8 +71,8 @@
 
   <!-- ── Application History ───────────────────────────── -->
   <div class="col-lg-5">
-    <h5 class="mb-3" style="font-family:'Syne',sans-serif;">
-      <i class="bi bi-clock-history me-1"></i>Application History
+    <h5 class="mb-3" style="font-family:'Syne',sans-serif;color:var(--brown);">
+      <i class="bi bi-clock-history me-1" style="color:var(--gold);"></i>Application History
     </h5>
 
     {% if applications %}
@@ -88,7 +87,7 @@
             <tbody>
             {% for app in applications %}
               <tr>
-                <td style="font-weight:600;font-size:.85rem;">{{ app.drive.job_title }}</td>
+                <td style="font-weight:600;font-size:.85rem;color:var(--brown);">{{ app.drive.job_title }}</td>
                 <td style="font-size:.82rem;color:var(--muted);">{{ app.drive.company.company_name }}</td>
                 <td style="font-size:.82rem;">{{ app.date.strftime('%d %b') }}</td>
                 <td>
@@ -101,8 +100,8 @@
         </div>
       </div>
     {% else %}
-      <div class="card p-4 text-center text-muted">
-        <i class="bi bi-inbox display-4 d-block mb-2 opacity-25"></i>
+      <div class="card p-4 text-center" style="background:#fffdf0;color:var(--muted);">
+        <i class="bi bi-inbox display-4 d-block mb-2" style="color:var(--gold);opacity:.4;"></i>
         <p class="mb-0">You haven't applied to any drives yet.</p>
       </div>
     {% endif %}
@@ -111,8 +110,8 @@
     {% if applications %}
     <div class="row g-2 mt-3">
       <div class="col-6">
-        <div class="card p-3 text-center">
-          <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--brand);">
+        <div class="card p-3 text-center" style="background:#fffdf0;border-color:var(--border);">
+          <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--brown);">
             {{ applications | length }}
           </div>
           <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);">
@@ -121,8 +120,8 @@
         </div>
       </div>
       <div class="col-6">
-        <div class="card p-3 text-center">
-          <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--accent);">
+        <div class="card p-3 text-center" style="background:#fffdf0;border-color:var(--border);">
+          <div style="font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--gold);">
             {{ applications | selectattr('status', 'equalto', 'Selected') | list | length }}
           </div>
           <div style="font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);">

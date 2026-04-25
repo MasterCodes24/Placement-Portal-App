@@ -19,18 +19,18 @@
 
     <!-- Profile Card -->
     <div class="card mb-4">
-      <div class="card-header"><i class="bi bi-info-circle me-1"></i>Company Profile</div>
-      <div class="card-body">
+      <div class="card-header"><i class="bi bi-info-circle me-1" style="color:var(--gold);"></i>Company Profile</div>
+      <div class="card-body" style="background:#fffdf0;">
         <dl class="row mb-0" style="font-size:.88rem;">
-          <dt class="col-5 text-muted">HR Contact</dt>
+          <dt class="col-5" style="color:var(--muted);">HR Contact</dt>
           <dd class="col-7">{{ profile.hr_contact }}</dd>
-          <dt class="col-5 text-muted">Website</dt>
+          <dt class="col-5" style="color:var(--muted);">Website</dt>
           <dd class="col-7">
             {% if profile.website %}
-              <a href="{{ profile.website }}" target="_blank" style="color:var(--accent)">{{ profile.website }}</a>
+              <a href="{{ profile.website }}" target="_blank" style="color:var(--gold);font-weight:600;">{{ profile.website }}</a>
             {% else %}—{% endif %}
           </dd>
-          <dt class="col-5 text-muted">Status</dt>
+          <dt class="col-5" style="color:var(--muted);">Status</dt>
           <dd class="col-7">
             <span class="badge-status status-{{ profile.approval_status | lower }}">
               {{ profile.approval_status }}
@@ -54,26 +54,26 @@
     <!-- Post a Drive (only if Approved) -->
     {% if profile.approval_status == 'Approved' %}
     <div class="card">
-      <div class="card-header"><i class="bi bi-plus-circle me-1"></i>Post New Drive</div>
-      <div class="card-body">
+      <div class="card-header"><i class="bi bi-plus-circle me-1" style="color:var(--gold);"></i>Post New Drive</div>
+      <div class="card-body" style="background:#fffdf0;">
         <form method="POST" action="{{ url_for('create_drive') }}">
           <div class="mb-3">
-            <label class="form-label" style="font-size:.85rem;font-weight:600;">Job Title</label>
+            <label class="form-label" style="font-size:.85rem;font-weight:600;color:var(--brown);">Job Title</label>
             <input class="form-control form-control-sm" type="text" name="job_title"
                    placeholder="e.g. Software Engineer" required>
           </div>
           <div class="mb-3">
-            <label class="form-label" style="font-size:.85rem;font-weight:600;">Description</label>
+            <label class="form-label" style="font-size:.85rem;font-weight:600;color:var(--brown);">Description</label>
             <textarea class="form-control form-control-sm" name="description" rows="3"
                       placeholder="Role overview, responsibilities…" required></textarea>
           </div>
           <div class="mb-3">
-            <label class="form-label" style="font-size:.85rem;font-weight:600;">Eligibility</label>
+            <label class="form-label" style="font-size:.85rem;font-weight:600;color:var(--brown);">Eligibility</label>
             <input class="form-control form-control-sm" type="text" name="eligibility"
                    placeholder="e.g. CGPA ≥ 7.0, CSE/IT branches">
           </div>
           <div class="mb-3">
-            <label class="form-label" style="font-size:.85rem;font-weight:600;">Application Deadline</label>
+            <label class="form-label" style="font-size:.85rem;font-weight:600;color:var(--brown);">Application Deadline</label>
             <input class="form-control form-control-sm" type="date" name="deadline" required>
           </div>
           <button type="submit" class="btn btn-accent w-100 btn-sm py-2">
@@ -88,27 +88,30 @@
 
   <!-- ── Right Column: Drives + Applicants ───────────── -->
   <div class="col-lg-8">
-    <h5 class="mb-3" style="font-family:'Syne',sans-serif;">
-      <i class="bi bi-briefcase me-1"></i>Your Placement Drives
+    <h5 class="mb-3" style="font-family:'Syne',sans-serif;color:var(--brown);">
+      <i class="bi bi-briefcase me-1" style="color:var(--gold);"></i>Your Placement Drives
     </h5>
 
     {% if drives %}
       {% for drive in drives %}
       <div class="card drive-card mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <span>{{ drive.job_title }}</span>
+          <span style="color:var(--brown);">{{ drive.job_title }}</span>
           <span class="badge-status status-{{ drive.status | lower }}">{{ drive.status }}</span>
         </div>
-        <div class="card-body">
+        <div class="card-body" style="background:#fffdf0;">
           <p style="font-size:.87rem;color:var(--muted);">{{ drive.description }}</p>
           <div class="d-flex flex-wrap gap-3" style="font-size:.83rem;">
-            <span><i class="bi bi-people me-1 text-primary"></i>
+            <span>
+              <i class="bi bi-people me-1" style="color:var(--gold);"></i>
               <strong>Eligibility:</strong> {{ drive.eligibility or '—' }}
             </span>
-            <span><i class="bi bi-calendar-event me-1 text-danger"></i>
+            <span>
+              <i class="bi bi-calendar-event me-1 text-danger"></i>
               <strong>Deadline:</strong> {{ drive.deadline }}
             </span>
-            <span><i class="bi bi-person-lines-fill me-1"></i>
+            <span>
+              <i class="bi bi-person-lines-fill me-1" style="color:var(--brown-light);"></i>
               <strong>Applicants:</strong> {{ drive_applicants[drive.id] | length }}
             </span>
           </div>
@@ -131,7 +134,7 @@
                 {% for app in drive_applicants[drive.id] %}
                   <tr>
                     <td>{{ app.student.full_name }}</td>
-                    <td><code>{{ app.student.roll_number }}</code></td>
+                    <td><code style="color:#895129;background:#fdf6e3;padding:2px 5px;border-radius:4px;">{{ app.student.roll_number }}</code></td>
                     <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
                       {{ app.student.skills or '—' }}
                     </td>
@@ -165,8 +168,8 @@
       </div>
       {% endfor %}
     {% else %}
-      <div class="card p-4 text-center text-muted">
-        <i class="bi bi-briefcase display-4 d-block mb-2 opacity-25"></i>
+      <div class="card p-4 text-center" style="background:#fffdf0;color:var(--muted);">
+        <i class="bi bi-briefcase display-4 d-block mb-2" style="color:var(--gold);opacity:.4;"></i>
         <p class="mb-0">No drives posted yet.
           {% if profile.approval_status == 'Approved' %}
             Use the form on the left to post one.
