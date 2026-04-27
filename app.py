@@ -80,11 +80,10 @@ def get_current_user():
 
 @app.route("/")
 def index():
-    """Landing page – redirect to dashboard if already logged in."""
+    """Landing page – redirect to dashboard if already logged in, else show home."""
     if "user_id" in session:
         return redirect(url_for("dashboard"))
-    return redirect(url_for("login"))
-
+    return render_template("home.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

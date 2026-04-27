@@ -1,0 +1,478 @@
+{% extends "layout.html" %}
+{% block title %}Home – PlaceHub{% endblock %}
+
+{% block head %}
+<style>
+  :root {
+    --honeycomb-cream:  #FFFDD0;
+    --honeycomb-brown:  #895129;
+    --honeycomb-gold:   #FFC107;
+  }
+
+  body {
+    background: var(--honeycomb-cream);
+  }
+
+  /* ── Navbar override ───────────────────────────── */
+  .navbar {
+    background: var(--honeycomb-brown) !important;
+  }
+
+  /* ── Hero Section ──────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, var(--honeycomb-brown) 0%, #6b3d1f 100%);
+    color: #fff;
+    padding: 6rem 2rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 1.2rem;
+    letter-spacing: -1px;
+    color: #FFFFFF;           /* pure white — high contrast on brown */
+    text-shadow: 0 2px 12px rgba(0,0,0,.25);
+  }
+
+  .hero .subtext {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    color: rgba(255, 255, 255, 0.90);
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+  }
+
+  .hero .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-cta-login {
+    background: var(--honeycomb-gold);
+    color: var(--honeycomb-brown);
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 2.8rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.25s ease;
+  }
+
+  .btn-cta-login:hover {
+    background: #ffca28;
+    color: var(--honeycomb-brown);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255,193,7,.35);
+  }
+
+  .btn-cta-register {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.75);
+    border-radius: 10px;
+    padding: 0.75rem 2.6rem;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: all 0.25s ease;
+  }
+
+  .btn-cta-register:hover {
+    background: rgba(255,255,255,0.15);
+    border-color: #fff;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* ── Features Section ──────────────────────────── */
+  .features-section {
+    padding: 5rem 2rem;
+    background: var(--honeycomb-cream);
+  }
+
+  .features-section .section-title {
+    font-family: 'Syne', sans-serif;
+    color: var(--honeycomb-brown);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.5px;
+  }
+
+  .features-section .section-sub {
+    text-align: center;
+    color: #9b8060;
+    font-size: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Equal-height cards via flexbox column */
+  .features-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: stretch;       /* all cards stretch to tallest */
+  }
+
+  .features-row .feature-col {
+    flex: 1 1 260px;
+    display: flex;              /* lets inner card fill full height */
+  }
+
+  .feature-card {
+    width: 100%;
+    background: #fff;
+    border-radius: 18px;
+    padding: 2.2rem 1.8rem;
+    text-align: center;
+    border: 2px solid #f0e6c9;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(137,81,41,.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* content starts at top, but card heights match */
+  }
+
+  .feature-card:hover {
+    border-color: var(--honeycomb-gold);
+    box-shadow: 0 10px 28px rgba(137,81,41,.16);
+    transform: translateY(-5px);
+  }
+
+  .feature-icon {
+    font-size: 3rem;
+    color: var(--honeycomb-gold);
+    margin-bottom: 1.2rem;
+    line-height: 1;
+  }
+
+  .feature-card h4 {
+    font-family: 'Syne', sans-serif;
+    color: var(--honeycomb-brown);
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .feature-card p {
+    color: #6b7a90;
+    font-size: 0.93rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* ── Stats Bar ────────────────────────────────── */
+  .stats-bar {
+    background: var(--honeycomb-brown);
+    color: #fff;
+    padding: 3.5rem 2rem;
+  }
+
+  .stats-bar .stats-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .stat-item {
+    text-align: center;
+    padding: 0.5rem 1rem;
+  }
+
+  .stat-item .number {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    color: var(--honeycomb-gold);
+    line-height: 1;
+  }
+
+  .stat-item .label {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+
+  .stats-divider {
+    color: rgba(255,255,255,0.2);
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── About Section ────────────────────────────── */
+  .about-section {
+    padding: 5rem 2rem;
+    background: #fff;
+  }
+
+  .about-section .about-icon {
+    font-size: 3.5rem;
+    color: var(--honeycomb-gold);
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .about-section h2 {
+    font-family: 'Syne', sans-serif;
+    color: var(--honeycomb-brown);
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-section p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #6b7a90;
+    margin-bottom: 1rem;
+  }
+
+  .about-section .about-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff8e1;
+    border: 1.5px solid var(--honeycomb-gold);
+    color: var(--honeycomb-brown);
+    border-radius: 30px;
+    padding: 0.4rem 1rem;
+    font-size: 0.84rem;
+    font-weight: 600;
+    margin: 0.25rem;
+  }
+
+  /* ── Bottom CTA ────────────────────────────────── */
+  .cta-bottom {
+    background: linear-gradient(135deg, #6b3d1f 0%, var(--honeycomb-brown) 100%);
+    color: #fff;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+
+  .cta-bottom h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 800;
+    margin-bottom: 0.8rem;
+    color: #fff;
+  }
+
+  .cta-bottom p {
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 2rem;
+  }
+
+  /* ── Footer override ──────────────────────────── */
+  footer {
+    background: var(--honeycomb-brown);
+    color: rgba(255,255,255,0.6);
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  /* ── Responsive ───────────────────────────────── */
+  @media (max-width: 768px) {
+    .hero        { padding: 3.5rem 1.5rem; }
+    .stats-divider { display: none; }
+    .features-row .feature-col { flex: 1 1 100%; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero ─────────────────────────────────────── -->
+<section class="hero">
+  <div class="container-lg">
+    <h1>Bridging the Gap Between<br>Talent and Opportunity</h1>
+    <p class="subtext">
+      Streamlined campus recruitment for students, companies, and institutes
+    </p>
+    <div class="cta-buttons">
+      <a href="{{ url_for('login') }}" class="btn-cta-login">
+        <i class="bi bi-box-arrow-in-right"></i> Login
+      </a>
+      <a href="{{ url_for('register') }}" class="btn-cta-register">
+        <i class="bi bi-person-plus"></i> Register
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ──────────────────────────────────── -->
+<section class="features-section">
+  <div class="container-lg">
+    <p class="section-title">Why Choose PlaceHub?</p>
+    <p class="section-sub">Everything you need to manage campus recruitment, all in one place.</p>
+
+    <div class="features-row">
+
+      <div class="feature-col">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-mortarboard-fill"></i></div>
+          <h4>For Students</h4>
+          <p>Browse open placement drives, apply with a single click, and track your application
+             history in real time. Stay updated on every career opportunity.</p>
+        </div>
+      </div>
+
+      <div class="feature-col">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-building"></i></div>
+          <h4>For Companies</h4>
+          <p>Post placement drives, review qualified candidates, and manage your entire
+             recruitment pipeline efficiently. Shortlist and select top talent with ease.</p>
+        </div>
+      </div>
+
+      <div class="feature-col">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-shield-lock-fill"></i></div>
+          <h4>For Admins</h4>
+          <p>Streamline approvals for companies and drives. Monitor recruitment statistics
+             and maintain system integrity with powerful user management tools.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Stats Bar ─────────────────────────────────── -->
+<section class="stats-bar">
+  <div class="container-lg">
+    <p class="stats-heading">PlaceHub at a Glance</p>
+    <div class="row align-items-center justify-content-center g-0">
+
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="number">500+</div>
+          <div class="label">Students</div>
+        </div>
+      </div>
+
+      <div class="col-1 d-none d-md-flex stats-divider">|</div>
+
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="number">50+</div>
+          <div class="label">Companies</div>
+        </div>
+      </div>
+
+      <div class="col-1 d-none d-md-flex stats-divider">|</div>
+
+      <div class="col-6 col-md-3">
+        <div class="stat-item">
+          <div class="number">100+</div>
+          <div class="label">Drives Posted</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── About ─────────────────────────────────────── -->
+<section class="about-section">
+  <div class="container-lg">
+    <div class="row align-items-center g-5">
+
+      <div class="col-lg-6">
+        <i class="bi bi-bullseye about-icon"></i>
+        <h2>What is PlaceHub?</h2>
+        <p>
+          PlaceHub is a comprehensive placement management system designed for educational
+          institutions. We bridge the gap between talented students and forward-thinking companies,
+          making campus recruitment transparent, efficient, and accessible.
+        </p>
+        <p>
+          Our platform uses role-based access control to ensure students focus on opportunities,
+          companies manage talent effectively, and administrators maintain full oversight — all in one place.
+        </p>
+        <div class="mt-3">
+          <span class="about-badge"><i class="bi bi-check-circle-fill text-success"></i> Approval Workflows</span>
+          <span class="about-badge"><i class="bi bi-check-circle-fill text-success"></i> Duplicate Prevention</span>
+          <span class="about-badge"><i class="bi bi-check-circle-fill text-success"></i> Real-time Status Tracking</span>
+          <span class="about-badge"><i class="bi bi-check-circle-fill text-success"></i> User Blacklisting</span>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="row g-3">
+          <div class="col-6">
+            <div class="feature-card p-3">
+              <i class="bi bi-person-check feature-icon" style="font-size:2rem;"></i>
+              <h4 style="font-size:1rem;">Easy Apply</h4>
+              <p style="font-size:.85rem;">One-click applications with instant confirmation.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="feature-card p-3">
+              <i class="bi bi-graph-up-arrow feature-icon" style="font-size:2rem;"></i>
+              <h4 style="font-size:1rem;">Track Progress</h4>
+              <p style="font-size:.85rem;">Monitor every application from Applied to Selected.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="feature-card p-3">
+              <i class="bi bi-funnel feature-icon" style="font-size:2rem;"></i>
+              <h4 style="font-size:1rem;">Smart Filters</h4>
+              <p style="font-size:.85rem;">Search companies and students by name or status.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="feature-card p-3">
+              <i class="bi bi-lock feature-icon" style="font-size:2rem;"></i>
+              <h4 style="font-size:1rem;">Secure RBAC</h4>
+              <p style="font-size:.85rem;">Role-based access ensures data stays protected.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Bottom CTA ─────────────────────────────────── -->
+<section class="cta-bottom">
+  <div class="container-lg">
+    <h2>Ready to Get Started?</h2>
+    <p>Join thousands of students and companies on PlaceHub today.</p>
+    <div class="cta-buttons" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="{{ url_for('login') }}" class="btn-cta-login">
+        <i class="bi bi-box-arrow-in-right"></i> Login Now
+      </a>
+      <a href="{{ url_for('register') }}" class="btn-cta-register">
+        <i class="bi bi-person-plus"></i> Create Account
+      </a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
